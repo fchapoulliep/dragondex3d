@@ -448,13 +448,6 @@
     "saga": "Dragon Ball Super"
   },
   {
-    "name": "Kefla",
-    "id": 64,
-    "type": "hero",
-    "description": "The fusion of Caulifla and Kale, a powerful Saiyan warrior from Universe 6.",
-    "saga": "Dragon Ball Super"
-  },
-  {
     "name": "Kid Buu",
     "id": 65,
     "type": "evil",
