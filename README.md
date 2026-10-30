@@ -23,7 +23,7 @@ Live: https://fchapoulliep.github.io/dragondex3d/
 - Three.js 0.171
 - React Three Fiber 8 and Drei 9
 - Swiper 11
-- React Router 7 (`HashRouter`)
+- React Router 7 (`BrowserRouter`)
 - react-parallax-tilt
 - ESLint 9
 - gh-pages
@@ -75,5 +75,5 @@ src/
 
 - A character's `name` in `src/data/dragoncharacters.json` is also the file name of its model and sprite. Adding a character means adding the JSON entry, `public/models/<Name>/<Name>.glb` and `public/sprites/<Name>.png`.
 - The models are glTF binary files exported from Blender, loaded with Drei's `useGLTF`. They ship with the repository (about 56 MB).
-- Routing uses a hash router, so character links look like `#/12` and work on GitHub Pages static hosting.
+- Characters live at real paths (`/dragondex3d/12`). GitHub Pages has no fallback for a single-page app, so the build (a small plugin in `vite.config.ts`) writes one HTML file per character, with its own title, description, share image and canonical URL, plus a `404.html` that loads the app on any other path and a `sitemap.xml` generated from the character data. Old `#/12` links are redirected.
 - Fan project, not affiliated with or endorsed by the owners of Dragon Ball. Characters and related assets belong to their respective owners.
