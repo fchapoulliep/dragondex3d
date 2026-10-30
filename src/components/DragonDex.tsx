@@ -31,6 +31,11 @@ import dragonBallLogo from "../assets/logo/dragonBallLogo.png";
  * )
  */
 const DragonDex: React.FC = () => {
+  // Back on the list after a character page, the tab title goes back to the site name.
+  React.useEffect(() => {
+    document.title = "DragonDex 3D";
+  }, []);
+
   const [dragonBallCharacterToShow, setDragonBallCharacterToShow] =
     React.useState(dragonBallCharacterList);
   const [searchQuery, setSearchQuery] = React.useState("");
