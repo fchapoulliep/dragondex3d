@@ -71,3 +71,20 @@
     color: rgba(210, 67, 61, 0.5);
   }
 }
+
+/* Phones: the same glowing arrows, slimmer, so that they leave room for the model */
+@media (max-width: 768px) {
+  .slider-left {
+    left: 4px;
+  }
+
+  .slider-right {
+    right: 4px;
+  }
+
+  .slider-left svg,
+  .slider-right svg {
+    width: 32px;
+    height: 32px;
+  }
+}

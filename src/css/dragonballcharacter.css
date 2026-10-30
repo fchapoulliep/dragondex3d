@@ -45,6 +45,17 @@
   margin: 5px 0;
 }
 
+#dragonball-overlay .description-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Only shown on phones, where the description folds into a bar */
+#dragonball-overlay .description-toggle {
+  display: none;
+}
+
 #dragonball-overlay .dragonball-types {
   position: absolute;
   right: 0%;
@@ -87,5 +98,75 @@
 
   #dragonball-overlay .dragonball-types .type-div:first-child p {
     margin-right: 5px;
+  }
+}
+
+/* Phones: the description folds into a bar with the name; the toggle opens it upwards */
+@media (max-width: 768px) {
+  #dragonball-overlay .dragonball-description {
+    box-sizing: border-box;
+    min-width: 0;
+    max-width: 60%;
+    padding: 4px 6px 4px 10px;
+  }
+
+  /* The head spans the panel, so that the chevron stays on the right once open */
+  #dragonball-overlay .description-head {
+    align-self: stretch;
+  }
+
+  #dragonball-overlay .description-head h2 {
+    margin: 0;
+  }
+
+  #dragonball-overlay .description-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    margin-left: auto;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: #fff;
+    cursor: pointer;
+    pointer-events: auto;
+  }
+
+  /* The whole bar answers the tap, not only the chevron */
+  #dragonball-overlay .description-toggle::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+  }
+
+  #dragonball-overlay .description-toggle svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform 200ms;
+  }
+
+  #dragonball-overlay .dragonball-description.open .description-toggle svg {
+    transform: rotate(180deg);
+  }
+
+  #dragonball-overlay .description-details {
+    display: none;
+  }
+
+  #dragonball-overlay .dragonball-description.open .description-details {
+    display: block;
+  }
+
+  /* Open, the panel stays above the rest of the scene */
+  #dragonball-overlay .dragonball-description.open {
+    z-index: 2;
   }
 }
