@@ -70,3 +70,26 @@
     display: none;
   }
 }
+
+/* Smaller screens: a three-column grid keeps the clock at the exact center,
+   whatever the length of the two links around it */
+@media screen and (max-width: 768px) {
+  #navbar .navbar-dragonball {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 10px;
+  }
+
+  #navbar .navbar-dragonball div {
+    width: auto;
+  }
+}
+
+/* Below 480 px the clock is hidden: the two links share the center */
+@media screen and (max-width: 480px) {
+  #navbar .navbar-dragonball {
+    grid-template-columns: auto auto;
+    justify-content: center;
+  }
+}
