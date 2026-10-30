@@ -88,5 +88,8 @@ const githubPagesRoutes = (): Plugin => ({
 export default defineConfig({
   plugins: [react(), githubPagesRoutes()],
   base: '/dragondex3d/',
+  // Appended to model URLs: stable within a deploy, so the browser and drei
+  // keep a model they already loaded, and new with the next deploy.
+  define: { __BUILD_ID__: JSON.stringify(Date.now().toString(36)) },
   assetsInclude: ['**/*.hdr', '**/*.glb']
 })

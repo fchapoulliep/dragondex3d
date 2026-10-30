@@ -5,6 +5,16 @@ import React from "react";
 import "../css/loader.css";
 
 /**
+ * Props for the Loader component.
+ */
+interface LoaderProps {
+  /** Plays the closing animation (the black disc shrinks to the center). */
+  closing: boolean;
+  /** Called once the closing animation is over, for the page to remove the loader. */
+  onClosed: () => void;
+}
+
+/**
  * Loader component that displays a loading animation.
  *
  * This component includes:
@@ -16,9 +26,17 @@ import "../css/loader.css";
  *   <Loader />
  * )
  */
-const Loader: React.FC = () => {
+const Loader: React.FC<LoaderProps> = ({ closing, onClosed }) => {
   return (
-    <div className="loader">
+    <div
+      className={`loader${closing ? " animation" : ""}`}
+      onAnimationEnd={(event) => {
+        // The inner animation loops forever: only the disc's own closing animation counts.
+        if (event.target === event.currentTarget && closing) {
+          onClosed();
+        }
+      }}
+    >
       <div className="randar-box">
         <input type="checkbox" checked readOnly className="randar-checkbox" />
         <div className="randar-top"></div>
