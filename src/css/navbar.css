@@ -59,5 +59,14 @@
   #navbar p,
   #navbar a {
     font-size: 12px;
+    /* The wide capitals of the font broke each label over two lines */
+    white-space: nowrap;
+  }
+}
+
+/* Small phones: the clock is decorative, it gives its room to the two links */
+@media screen and (max-width: 480px) {
+  #navbar .navbar-dragonball div:nth-child(2) {
+    display: none;
   }
 }
