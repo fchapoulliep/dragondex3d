@@ -4,6 +4,10 @@ import NavBar from "./NavBar";
 import Slider from "./Slider";
 import { useParams } from "react-router-dom";
 import DragonBallCharacter from "./DragonBallCharacter";
+import dragonBallList from "../data/dragoncharacters.json";
+
+// Read from the data rather than hardcoded, so the right arrow stays correct when characters are added.
+const lastId = String(Math.max(...dragonBallList.map((c) => c.id)));
 
 /**
  * `DragonBallLayout` is a React functional component that renders the layout for displaying a Dragon Ball Character.
@@ -13,7 +17,7 @@ import DragonBallCharacter from "./DragonBallCharacter";
  * - A `NavBar` component at the top.
  * - A `Slider` component with direction "left" if the `dragonballId` is not "1".
  * - A `DragonBallCharacter` component that displays the Character based on the `dragonballId` or a default ID if `dragonballId` is not available.
- * - A `Slider` component with direction "right" if the `dragonballId` is not "151".
+ * - A `Slider` component with direction "right" if the `dragonballId` is not the last character's id.
  *
  * @returns {JSX.Element} The rendered layout for the Dragon Ball Character page.
  */
@@ -25,7 +29,7 @@ const DragonBallLayout: React.FC = () => {
       <NavBar />
       {dragonballId !== "1" && <Slider direction="left" />}
       <DragonBallCharacter dragonBallId={dragonballId || "defaultId"} />
-      {dragonballId !== "106" && <Slider direction="right" />}
+      {dragonballId !== lastId && <Slider direction="right" />}
     </>
   );
 };
