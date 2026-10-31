@@ -15,11 +15,6 @@
 }
 
 .loader.animation {
-  /* The end state is also the base style: Safari on iPhone can drop the
-     animation one frame before the element is removed, and would then show
-     the full black disc, a black flash over the whole screen */
-  transform: translate(-50%, -50%) scale(0);
-  opacity: 0;
   animation: shrinkToCenter 1s forwards;
 }
 
