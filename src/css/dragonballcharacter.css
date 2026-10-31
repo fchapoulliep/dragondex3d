@@ -9,6 +9,22 @@
   justify-content: center;
   pointer-events: none;
   overflow: hidden;
+  /* Seen until the saga background has fully loaded */
+  background-color: #111;
+}
+
+/* The saga background shows only once fully loaded, so that it never paints in strips */
+#dragonball-overlay .dragonball-background {
+  position: absolute;
+  inset: 0;
+  background-position: bottom;
+  background-size: cover;
+  opacity: 0;
+  transition: opacity 400ms ease-out;
+}
+
+#dragonball-overlay .dragonball-background.shown {
+  opacity: 1;
 }
 
 #dragonball-overlay .dragonball-description {

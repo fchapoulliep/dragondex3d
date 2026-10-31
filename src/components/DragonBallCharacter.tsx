@@ -162,6 +162,32 @@ const DragonBallCharacter: React.FC<DragonBallProps> = ({ dragonBallId }) => {
     setLoaderPhase((phase) => (phase === "visible" ? "closing" : phase));
   }, [modelDrawn]);
 
+  const backgroundPath = dragonballcharacter
+    ? `${import.meta.env.BASE_URL}backgrounds/${dragonballcharacter.saga
+        .toLowerCase()
+        .replace(/ /g, "-")}.png`
+    : null;
+
+  // The background shows only once fully loaded and decoded: the first one
+  // fades in over the dark base, a later one replaces the previous at once
+  const [shownBackground, setShownBackground] = React.useState<string | null>(null);
+
+  useEffect(() => {
+    if (!backgroundPath) return;
+    let cancelled = false;
+    const image = new Image();
+    image.src = backgroundPath;
+    image
+      .decode()
+      .catch(() => undefined)
+      .then(() => {
+        if (!cancelled) setShownBackground(backgroundPath);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [backgroundPath]);
+
   if (!dragonballcharacter) {
     return (
       <div
@@ -181,16 +207,11 @@ const DragonBallCharacter: React.FC<DragonBallProps> = ({ dragonBallId }) => {
   }
 
   return (
-    <div
-      id="dragonball-overlay"
-      style={{
-        backgroundImage: `url(${
-          import.meta.env.BASE_URL
-        }backgrounds/${dragonballcharacter.saga.toLowerCase().replace(/ /g, "-")}.png)`,
-        backgroundPosition: "bottom",
-        backgroundSize: "cover",
-      }}
-    >
+    <div id="dragonball-overlay">
+      <div
+        className={`dragonball-background${shownBackground ? " shown" : ""}`}
+        style={shownBackground ? { backgroundImage: `url(${shownBackground})` } : undefined}
+      />
       {loaderPhase !== "hidden" && (
         <Loader
           closing={loaderPhase === "closing"}
