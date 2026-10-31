@@ -7,6 +7,8 @@
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
+  /* Safari on iPhone draws a grey box over a tapped link */
+  -webkit-tap-highlight-color: transparent;
   z-index: 1;
 }
 
