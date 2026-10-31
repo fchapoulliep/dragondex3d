@@ -1,30 +1,31 @@
+/* The loader stands where the model will appear, above the scene: the model
+   then comes forward from behind it */
 .loader {
-  position: fixed;
+  position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
-  width: 500vw;
-  height: 500vw;
-  background-color: rgba(0, 0, 0, 1);
-  border-radius: 50%;
-  z-index: 1000000;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  transform: translate(-50%, -50%) scale(0.7);
+  z-index: 1;
+  pointer-events: none;
+  animation: loaderIn 200ms ease-out;
 }
 
-.loader.animation {
-  animation: shrinkToCenter 1s forwards;
+/* Fades out while the model comes forward */
+.loader.closing {
+  animation: loaderOut 300ms ease-in forwards;
 }
 
-@keyframes shrinkToCenter {
-  0% {
-    transform: translate(-50%, -50%) scale(1); /* Starts centered and full size */
+@keyframes loaderIn {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes loaderOut {
+  from {
     opacity: 1;
   }
-  100% {
-    transform: translate(-50%, -50%) scale(0); /* Shrinks toward the center */
+  to {
     opacity: 0;
   }
 }

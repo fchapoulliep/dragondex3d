@@ -1,7 +1,7 @@
 /**
  * Importing React, the Loader component, the DragonBallType component, and the Link component.
  */
-import React, { Suspense, useEffect, useLayoutEffect, useMemo, useRef } from "react";
+import React, { Suspense, useEffect, useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, useGLTF } from "@react-three/drei";
@@ -28,6 +28,12 @@ interface DragonBallModelProps {
   onReady: () => void;
 }
 
+/** How long the model takes to come forward to its place, in seconds. */
+const ENTRANCE_S = 0.5;
+
+/** How far behind its place the model starts, in scene units (the camera stands 5 units away). */
+const ENTRANCE_DEPTH = 15;
+
 /**
  * Component that renders a 3D model of a Dragon Ball Character using the provided model path and Character ID.
  * It handles loading the model, playing idle animations, and adjusting the model's scale and materials.
@@ -43,6 +49,8 @@ const DragonBallModel: React.FC<DragonBallModelProps> = ({ modelPath, onReady })
   // each time the page changed state (loader, description), hence the jolts
   const mixer = useMemo(() => new THREE.AnimationMixer(scene), [scene]);
   const frames = useRef(0);
+  const group = useRef<THREE.Group>(null);
+  const entrance = useRef<{ from: THREE.Vector3; elapsed: number } | null>(null);
 
   useEffect(() => {
     if (animations.length > 0) {
@@ -62,13 +70,27 @@ const DragonBallModel: React.FC<DragonBallModelProps> = ({ modelPath, onReady })
     };
   }, [animations, mixer, scene]);
 
-  useFrame((_, delta) => {
+  useFrame(({ camera }, delta) => {
     mixer.update(delta);
     // A few frames let the framing settle (centering, scale, camera fit): only
-    // then is the model shown, so that it never jumps or glides into place.
+    // then is the model shown, coming forward from far behind its place.
     frames.current += 1;
     if (frames.current === 5) {
+      // Along the line of sight (the camera looks at the origin), so that the
+      // far-away model stands right behind the loader
+      const from = camera.position.clone().normalize().multiplyScalar(-ENTRANCE_DEPTH);
+      entrance.current = { from, elapsed: 0 };
       onReady();
+    }
+
+    const move = entrance.current;
+    if (move && group.current) {
+      // A long first frame (shader compilation) must not skip half the move
+      move.elapsed = Math.min(move.elapsed + Math.min(delta, 1 / 30), ENTRANCE_S);
+      const progress = move.elapsed / ENTRANCE_S;
+      // Fast at first, then slows down to settle in place
+      const eased = 1 - Math.pow(1 - progress, 3);
+      group.current.position.copy(move.from).multiplyScalar(1 - eased);
     }
   });
 
@@ -83,17 +105,19 @@ const DragonBallModel: React.FC<DragonBallModelProps> = ({ modelPath, onReady })
     }
   }, [scene]);
 
-  return <primitive object={scene} scale={0.25} position={[0, -2, 0]} />;
+  return (
+    <group ref={group}>
+      <primitive object={scene} scale={0.25} position={[0, -2, 0]} />
+    </group>
+  );
 };
 
 /**
- * Models drawn during this visit. drei keeps them in memory, so they come back
- * at once and need no loader.
+ * How long a model may take to show before the loader appears: a quick one,
+ * such as a model already seen during the visit (drei keeps it in memory),
+ * needs none.
  */
-const seenModels = new Set<string>();
-
-/** How long the loader stays at least, for a model not seen yet. */
-const LOADER_MIN_MS = 1000;
+const LOADER_DELAY_MS = 150;
 
 /**
  *  Component that renders a Dragon Ball Character page with a 3D model, description, and type information.
@@ -117,37 +141,26 @@ const DragonBallCharacter: React.FC<DragonBallProps> = ({ dragonBallId }) => {
     [dragonballcharacterName]
   );
 
-  // The loader follows the model rather than a fixed delay. A model not seen
-  // yet shows it at once and for at least LOADER_MIN_MS, so that a quick load
-  // reads as a transition rather than a black flash; a model already seen
-  // during the visit is still in memory and shows up without it.
+  // The loader stands where the model will appear, and only once the model
+  // has taken more than LOADER_DELAY_MS to show.
   const [loaderPhase, setLoaderPhase] = React.useState<
     "visible" | "closing" | "hidden"
-  >("visible");
+  >("hidden");
   const [drawnPath, setDrawnPath] = React.useState<string | null>(null);
   const [descriptionOpen, setDescriptionOpen] = React.useState(false);
   const modelDrawn = drawnPath === modelPath;
-  const loaderShownAt = useRef(performance.now());
 
-  useLayoutEffect(() => {
-    if (seenModels.has(modelPath)) {
-      setLoaderPhase("hidden");
-      return;
-    }
-    loaderShownAt.current = performance.now();
-    setLoaderPhase("visible");
-  }, [modelPath]);
+  useEffect(() => {
+    if (modelDrawn) return;
+    const timer = setTimeout(() => setLoaderPhase("visible"), LOADER_DELAY_MS);
+    return () => clearTimeout(timer);
+  }, [modelDrawn, modelPath]);
 
   useEffect(() => {
     if (!modelDrawn) return;
-    seenModels.add(modelPath);
-    const elapsed = performance.now() - loaderShownAt.current;
-    const timer = setTimeout(
-      () => setLoaderPhase((phase) => (phase === "visible" ? "closing" : phase)),
-      Math.max(0, LOADER_MIN_MS - elapsed),
-    );
-    return () => clearTimeout(timer);
-  }, [modelDrawn, modelPath]);
+    // The loader fades out while the model comes forward
+    setLoaderPhase((phase) => (phase === "visible" ? "closing" : phase));
+  }, [modelDrawn]);
 
   if (!dragonballcharacter) {
     return (

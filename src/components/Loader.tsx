@@ -8,9 +8,9 @@ import "../css/loader.css";
  * Props for the Loader component.
  */
 interface LoaderProps {
-  /** Plays the closing animation (the black disc shrinks to the center). */
+  /** Fades the loader out, while the model comes forward. */
   closing: boolean;
-  /** Called once the closing animation is over, for the page to remove the loader. */
+  /** Called once the loader has faded out, for the page to remove it. */
   onClosed: () => void;
 }
 
@@ -29,10 +29,10 @@ interface LoaderProps {
 const Loader: React.FC<LoaderProps> = ({ closing, onClosed }) => {
   return (
     <div
-      className={`loader${closing ? " animation" : ""}`}
+      className={`loader${closing ? " closing" : ""}`}
       onAnimationEnd={(event) => {
-        // The inner animation loops forever: only the disc's own closing animation counts.
-        if (event.target === event.currentTarget && closing) {
+        // The radar's own animations bubble up too: only the loader's fade-out counts.
+        if (event.target === event.currentTarget && event.animationName === "loaderOut") {
           onClosed();
         }
       }}
