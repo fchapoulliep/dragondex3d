@@ -24,6 +24,8 @@ interface DragonBallProps {
  */
 interface DragonBallModelProps {
   modelPath: string;
+  /** Comes forward from far behind its place, rather than showing up in place. */
+  comesForward: boolean;
   /** Called once the model is drawn and its framing has settled. */
   onReady: () => void;
 }
@@ -31,8 +33,11 @@ interface DragonBallModelProps {
 /** How long the model takes to come forward to its place, in seconds. */
 const ENTRANCE_S = 0.5;
 
-/** How far behind its place the model starts, in scene units (the camera stands 5 units away). */
-const ENTRANCE_DEPTH = 15;
+/**
+ * How far behind its place the model starts, in scene units: with the camera
+ * 5 units away, it first shows at a fifth of its size.
+ */
+const ENTRANCE_DEPTH = 20;
 
 /**
  * Component that renders a 3D model of a Dragon Ball Character using the provided model path and Character ID.
@@ -43,7 +48,11 @@ const ENTRANCE_DEPTH = 15;
  * @param {string} props.modelPath - The path to the 3D model file.
  * @returns {JSX.Element} The rendered 3D model of the Dragon Ball Character.
  */
-const DragonBallModel: React.FC<DragonBallModelProps> = ({ modelPath, onReady }) => {
+const DragonBallModel: React.FC<DragonBallModelProps> = ({
+  modelPath,
+  comesForward,
+  onReady,
+}) => {
   const { scene, animations } = useGLTF(modelPath);
   // One mixer per model: created on every render, it restarted the animation
   // each time the page changed state (loader, description), hence the jolts
@@ -76,10 +85,12 @@ const DragonBallModel: React.FC<DragonBallModelProps> = ({ modelPath, onReady })
     // then is the model shown, coming forward from far behind its place.
     frames.current += 1;
     if (frames.current === 5) {
-      // Along the line of sight (the camera looks at the origin), so that the
-      // far-away model stands right behind the loader
-      const from = camera.position.clone().normalize().multiplyScalar(-ENTRANCE_DEPTH);
-      entrance.current = { from, elapsed: 0 };
+      if (comesForward) {
+        // Along the line of sight (the camera looks at the origin), so that the
+        // far-away model stands right behind the loader
+        const from = camera.position.clone().normalize().multiplyScalar(-ENTRANCE_DEPTH);
+        entrance.current = { from, elapsed: 0 };
+      }
       onReady();
     }
 
@@ -113,9 +124,14 @@ const DragonBallModel: React.FC<DragonBallModelProps> = ({ modelPath, onReady })
 };
 
 /**
+ * Models drawn during this visit. drei keeps them in memory: they show up in
+ * place at once, without coming forward again.
+ */
+const seenModels = new Set<string>();
+
+/**
  * How long a model may take to show before the loader appears: a quick one,
- * such as a model already seen during the visit (drei keeps it in memory),
- * needs none.
+ * such as a model already seen during the visit, needs none.
  */
 const LOADER_DELAY_MS = 150;
 
@@ -149,6 +165,8 @@ const DragonBallCharacter: React.FC<DragonBallProps> = ({ dragonBallId }) => {
   const [drawnPath, setDrawnPath] = React.useState<string | null>(null);
   const [descriptionOpen, setDescriptionOpen] = React.useState(false);
   const modelDrawn = drawnPath === modelPath;
+  // Decided once per model, before the effect below marks it as seen
+  const comesForward = useMemo(() => !seenModels.has(modelPath), [modelPath]);
 
   useEffect(() => {
     if (modelDrawn) return;
@@ -158,9 +176,10 @@ const DragonBallCharacter: React.FC<DragonBallProps> = ({ dragonBallId }) => {
 
   useEffect(() => {
     if (!modelDrawn) return;
+    seenModels.add(modelPath);
     // The loader fades out while the model comes forward
     setLoaderPhase((phase) => (phase === "visible" ? "closing" : phase));
-  }, [modelDrawn]);
+  }, [modelDrawn, modelPath]);
 
   const backgroundPath = dragonballcharacter
     ? `${import.meta.env.BASE_URL}backgrounds/${dragonballcharacter.saga
@@ -284,6 +303,7 @@ const DragonBallCharacter: React.FC<DragonBallProps> = ({ dragonBallId }) => {
         <Suspense fallback={null}>
           <DragonBallModel
             modelPath={modelPath}
+            comesForward={comesForward}
             onReady={() => setDrawnPath(modelPath)}
           />
         </Suspense>
