@@ -76,7 +76,7 @@ scripts/
 
 ## Signature idles
 
-Every model shares the same 45-bone rig, and every character has its own held pose (arms crossed, hands on hips, fighting stance...) with a 4 s breathing loop, built by `scripts/blender/idle.py` and stored in the `.glb` as a clip named `Idle`, the one the character page plays. `signatures.json` maps each character to a pose and its parameters; the poses themselves (`POSES` in `idle.py`) are built in world space, by aiming bones or by reaching points measured on the body, so that one pose fits bodies of different sizes.
+Every model shares the same 45-bone rig, and every character has its own held pose (arms crossed, hands on hips, fighting stance...) with a 4 s breathing loop, built by `scripts/blender/idle.py` and stored in the `.glb` as a clip named `Idle`, the one the character page plays. `signatures.json` maps each character to a pose and its parameters; the poses themselves (`POSES` in `idle.py`) are built in world space, by aiming bones or by reaching points measured on the body, so that one pose fits bodies of different sizes. A character may own a gesture, a short move played once per loop after the held pose (`"gesture": "vegeta_fist"` in `signatures.json`), written in `scripts/blender/gestures.py` as a few key poses that the tool blends; the clip then runs rest, gesture, rest (about 7 s). The rig has no finger bones, so the hand shapes of the tool do nothing here.
 
 To rebuild the models after changing a pose or a signature, with Blender 5.2 installed:
 
