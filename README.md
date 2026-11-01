@@ -69,7 +69,24 @@ src/
   css/                         stylesheets
   data/dragoncharacters.json   character list (id, name, series, hero or evil, description)
   assets/                      logo, font, card art
+scripts/
+  blender/idle.py              Blender tool that builds each model's signature idle
+  blender/signatures.json      the pose chosen for each character
 ```
+
+## Signature idles
+
+Every model shares the same 45-bone rig, and every character has its own held pose (arms crossed, hands on hips, fighting stance...) with a 4 s breathing loop, built by `scripts/blender/idle.py` and stored in the `.glb` as a clip named `Idle`, the one the character page plays. `signatures.json` maps each character to a pose and its parameters; the poses themselves (`POSES` in `idle.py`) are built in world space, by aiming bones or by reaching points measured on the body, so that one pose fits bodies of different sizes.
+
+To rebuild the models after changing a pose or a signature, with Blender 5.2 installed:
+
+```bash
+blender --background --python scripts/blender/idle.py -- \
+  --models public/models --signatures scripts/blender/signatures.json \
+  --renders /tmp/idle-renders --report /tmp/idle-report.json [--only "Vegeta (Base Form)"] [--dry-run]
+```
+
+`--dry-run` renders the control views (front, three-quarter, mid-breath) and measures how much of the arms sits inside the torso, without touching the files.
 
 ## Notes
 

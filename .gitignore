@@ -24,3 +24,6 @@ dist-ssr
 *.sw?
 
 *.py
+
+# The Blender tool is source, unlike the stray Python files this rule was written for
+!scripts/blender/*.py
