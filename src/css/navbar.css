@@ -102,8 +102,11 @@
 }
 
 @media screen and (max-width: 480px) {
+  /* the bar's own height, held at the top: centred in a taller box, it
+     left a strip of page above it (Pokédex, DragonDex) */
   #navbar {
-    height: 52px;
+    height: 44px;
+    align-items: flex-start;
   }
 
   #navbar .navbar-dragonball {
@@ -115,6 +118,9 @@
     padding: 0 18px;
     box-sizing: border-box;
     gap: 0;
+    /* on larger screens the top of the frame sits above the page; here it
+       would draw a line along the top */
+    border-top-width: 0;
   }
 
   #navbar .navbar-dragonball > div:nth-child(n) {
