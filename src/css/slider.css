@@ -74,14 +74,17 @@
   }
 }
 
-/* Phones: the same glowing arrows, slimmer, so that they leave room for the model */
+/* Phones: the same glowing arrows, slimmer, so that they leave room for the model.
+   Hovering grows an arrow and nudges it outward by about 6 px, so the
+   margin must stay larger: a narrow desktop window (half a laptop screen)
+   would otherwise get a horizontal scrollbar that lifts the whole page. */
 @media (max-width: 768px) {
   .slider-left {
-    left: 4px;
+    left: 8px;
   }
 
   .slider-right {
-    right: 4px;
+    right: 8px;
   }
 
   .slider-left svg,
