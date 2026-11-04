@@ -21,13 +21,15 @@ import "../css/footer.css";
 const Footer: React.FC = () => {
   return (
     <footer className="footer">
-      <div className="footer-copyrights">
+      {/* data-nosnippet keeps Google from quoting the footer under the page title:
+          the home pages have little text, and Google picked the copyright line */}
+      <div className="footer-copyrights" data-nosnippet>
         <p>
           &copy; {new Date().getFullYear()} Florian Chapoullié-Pino. All rights
           reserved.
         </p>
       </div>
-      <div className="footer-links">
+      <div className="footer-links" data-nosnippet>
         <a
           href="https://fchapoulliep.github.io/portfolio/"
           target="_blank"
@@ -50,7 +52,7 @@ const Footer: React.FC = () => {
           LinkedIn
         </a>
       </div>
-      <div className="footer-credits">
+      <div className="footer-credits" data-nosnippet>
         <p>
           Designed by <b>Florian Chapoullié-Pino</b>
         </p>

@@ -28,7 +28,8 @@ const NavBar: React.FC = () => {
 
   return (
     <nav id="navbar">
-      <div className="navbar-dragonball">
+      {/* data-nosnippet: the clock and the links are no text for Google to quote */}
+      <div className="navbar-dragonball" data-nosnippet>
         <div className="navbar-link">
           {/* Phones show the short labels: the long ones overflowed the bar */}
           <Link to="/" aria-label="Back to the DragonDex">
