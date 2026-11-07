@@ -1,0 +1,154 @@
+/* First-visit guide (src/components/Onboarding.tsx). This file is the same in
+   every dex: each dex sets the --ob-* colours in its App.css, on :root.
+
+   --ob-dim         the dark layer around the lit card or model
+   --ob-ring        the dashed line around what is lit
+   --ob-box-bg      dialogue box background
+   --ob-box-text    dialogue box text
+   --ob-box-border  dialogue box border (a full `border` value)
+   --ob-box-radius  dialogue box corners
+   --ob-box-shadow  dialogue box shadow (a full `box-shadow` value)
+   --ob-button      the button that closes it
+   --ob-button-font its font, when it differs from the text's
+   --ob-arrow       the blinking arrow before it
+   --ob-font-scale  text size, for a font that reads smaller than most (1 by default) */
+
+.onboarding {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  /* Only the dark layer and the box take clicks: the hole lets them through,
+     to the card or to the model */
+  pointer-events: none;
+  animation: onboarding-in 250ms ease-out;
+  transition: opacity 200ms ease-in;
+}
+
+.onboarding.leaving {
+  opacity: 0;
+}
+
+@keyframes onboarding-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.onboarding-dim {
+  position: absolute;
+  inset: 0;
+}
+
+.onboarding-dim path {
+  fill: var(--ob-dim, rgba(0, 0, 0, 0.75));
+  pointer-events: visiblePainted;
+  cursor: pointer;
+}
+
+.onboarding-ring {
+  position: absolute;
+  box-sizing: border-box;
+  border: 3px dashed var(--ob-ring, #ffffff);
+  animation: onboarding-ring 1.6s ease-in-out infinite;
+}
+
+@keyframes onboarding-ring {
+  50% {
+    transform: scale(1.025);
+  }
+}
+
+.onboarding-box {
+  position: absolute;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  box-sizing: border-box;
+  width: min(900px, calc(100vw - 32px));
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.4em 1em;
+  padding: 0.9em 1.3em;
+  pointer-events: auto;
+  background: var(--ob-box-bg, #ffffff);
+  color: var(--ob-box-text, #111111);
+  border: var(--ob-box-border, 5px solid #111111);
+  border-radius: var(--ob-box-radius, 14px);
+  box-shadow: var(--ob-box-shadow, 6px 6px 0 #111111);
+  font-size: calc(clamp(16px, 0.75rem + 0.9vw, 26px) * var(--ob-font-scale, 1));
+  line-height: 1.35;
+  text-align: left;
+  animation: onboarding-box-in 300ms ease-out;
+}
+
+.onboarding-box.top {
+  top: 16px;
+  bottom: auto;
+}
+
+@keyframes onboarding-box-in {
+  from {
+    opacity: 0;
+    translate: 0 12px;
+  }
+}
+
+.onboarding-box p {
+  margin: 0;
+  flex: 1 1 18em;
+  /* No word left alone on the last line */
+  text-wrap: balance;
+}
+
+.onboarding-box button {
+  flex-shrink: 0;
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+  padding: 0.2em 0;
+  border: none;
+  background: none;
+  color: var(--ob-button, #555555);
+  font: inherit;
+  font-family: var(--ob-button-font, inherit);
+  font-size: 0.78em;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+
+.onboarding-box button:hover,
+.onboarding-box button:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.onboarding-box button:focus {
+  outline: none;
+}
+
+.onboarding-box button svg {
+  width: 0.75em;
+  height: 0.75em;
+  fill: var(--ob-arrow, currentColor);
+  animation: onboarding-blink 0.9s steps(1) infinite;
+}
+
+@keyframes onboarding-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .onboarding,
+  .onboarding-ring,
+  .onboarding-box,
+  .onboarding-box button svg {
+    animation: none;
+    transition: none;
+  }
+}

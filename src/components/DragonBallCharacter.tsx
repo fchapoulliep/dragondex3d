@@ -7,6 +7,7 @@ import { Canvas } from "@react-three/fiber";
 import { OrbitControls, useGLTF } from "@react-three/drei";
 import dragonBallList from "../data/dragoncharacters.json";
 import Loader from "./Loader";
+import Onboarding from "./Onboarding";
 import * as THREE from "three";
 import "../css/dragonballcharacter.css";
 import DragonBallType from "./DragonBallType";
@@ -308,6 +309,15 @@ const DragonBallCharacter: React.FC<DragonBallProps> = ({ dragonBallId }) => {
           />
         </Suspense>
       </Canvas>
+      <Onboarding
+        step="model"
+        ready={modelDrawn}
+        text={{
+          mouse: `Drag to spin ${dragonballcharacter.name} around, scroll to zoom in.`,
+          touch: `Swipe to spin ${dragonballcharacter.name} around, pinch to zoom in.`,
+        }}
+        button="Let's go"
+      />
     </div>
   );
 };

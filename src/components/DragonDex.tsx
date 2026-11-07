@@ -16,6 +16,7 @@ import dragonBallCharacterList from "../data/dragoncharacters.json";
 
 /* Importing the Footer component */
 import Footer from "./Footer";
+import Onboarding from "./Onboarding";
 import DragonBallCard from "./DragonBallCard";
 
 import dragonBallLogo from "../assets/logo/dragonBallLogo.png";
@@ -166,6 +167,15 @@ const DragonDex: React.FC = () => {
         </Swiper>
       </div>
       <Footer />
+      <Onboarding
+        step="cards"
+        target=".swiper-slide-active .dragonball-cards"
+        text={{
+          mouse: "Click a card to meet the character in 3D!",
+          touch: "Tap a card to meet the character in 3D!",
+        }}
+        button="Got it"
+      />
     </div>
   );
 };

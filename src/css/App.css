@@ -29,6 +29,18 @@ body,
   --yellow: #ffc83d;
 }
 
+/* Colours of the first-visit guide (see onboarding.css) */
+:root {
+  --ob-dim: rgba(17, 17, 17, 0.78);
+  --ob-ring: var(--yellow);
+  --ob-box-bg: var(--paper);
+  --ob-box-text: var(--ink-text);
+  --ob-box-border: 4px solid var(--ink);
+  --ob-box-radius: 6px;
+  --ob-box-shadow: 7px 7px 0 var(--ink);
+  --ob-button: var(--ink);
+}
+
 body {
   background-color: var(--paper);
 }
