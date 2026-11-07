@@ -43,7 +43,10 @@ function useGlareFollowsSize() {
     if (!tilt || !node || typeof tilt.setSize !== "function" || typeof ResizeObserver === "undefined") {
       return;
     }
-    const observer = new ResizeObserver(() => tilt.setSize?.());
+    // The card can be gone (another page opened) by the time the observer reports
+    const observer = new ResizeObserver(() => {
+      if (tilt.wrapperEl?.node) tilt.setSize?.();
+    });
     observer.observe(node);
     return () => observer.disconnect();
   }, []);
