@@ -5,16 +5,17 @@
   align-items: center;
   height: 70%;
   width: 100%;
-  color: white;
+  color: var(--ink-text);
   border-radius: 20px;
   transform-style: preserve-3d;
-  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.3);
+  border: 3px solid var(--ink);
+  box-shadow: 6px 8px 0 var(--ink);
   transition: height 0.3s ease-in-out;
   max-height: 550px;
 }
 
 .dragonball-cards.dragon-ball-z {
-  background-color: #fbbc42;
+  background-color: #ffc83d;
   background-image: url("../assets/card-types/dragon-ball-z.png");
   background-repeat: no-repeat;
   background-position: 100px 180px;
@@ -22,15 +23,20 @@
 }
 
 .dragonball-cards.dragon-ball {
-  background-color: #1c4595;
+  background-color: #2f6fe0;
   background-image: url("../assets/card-types/dragon-ball.png");
   background-repeat: no-repeat;
   background-position: 420% 70px;
   background-size: 90%;
 }
 
+/* black names would read 3.9:1 on the blue card: white there (4.7:1) */
+.dragonball-cards.dragon-ball .inner-element {
+  color: #ffffff;
+}
+
 .dragonball-cards.dragon-ball-gt {
-  background-color: #ff6600;
+  background-color: #ff7a1a;
   background-image: url("../assets/card-types/dragon-ball-gt.png");
   background-repeat: no-repeat;
   background-position: 80px 140px;
@@ -38,7 +44,7 @@
 }
 
 .dragonball-cards.dragon-ball-super {
-  background-color: #e72542;
+  background-color: #ff4d6a;
   background-image: url("../assets/card-types/dragon-ball-super.png");
   background-repeat: no-repeat;
   background-position: 420% 70px;
@@ -52,7 +58,7 @@
   align-items: center;
   font-size: 20px;
   font-style: italic;
-  color: white;
+  color: var(--ink-text);
   transform: translateZ(60px);
   height: 100%;
   width: 100%;

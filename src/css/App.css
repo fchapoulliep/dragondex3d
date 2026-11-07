@@ -17,6 +17,28 @@ body,
   height: 100%;
 }
 
+/* "Manga" palette (2026-11-07): a white page screened with dots, cards in
+   bright flat colours outlined in black with a hard shadow, black names
+   (white on the blue Dragon Ball card): 4.7:1 to 12:1. The old white names
+   read 1.7:1 on the Z cards and 2.9:1 on the GT ones. */
+:root {
+  --ink: #111111;
+  --ink-text: #141414;
+  --paper: #ffffff;
+  --dots: #d6d6d6;
+  --yellow: #ffc83d;
+}
+
+body {
+  background-color: var(--paper);
+}
+
+/* Swiper sets --swiper-theme-color on :root in its own sheet, loaded after
+   this one; its arrows read --swiper-navigation-color first */
+.swiper {
+  --swiper-navigation-color: var(--ink);
+}
+
 a {
   text-decoration: none;
   color: inherit;
@@ -33,16 +55,16 @@ a:hover {
 }
 
 ::-webkit-scrollbar-track {
-  background: linear-gradient(#e76a24 60px, transparent 60px);
+  background: linear-gradient(var(--ink) 60px, transparent 60px);
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #e76a24;
+  background-color: var(--ink);
   border-radius: 10px;
   border: 3px solid transparent;
   background-clip: content-box;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: #d65002;
+  background-color: #444444;
 }
