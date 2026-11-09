@@ -40,7 +40,7 @@ const NavBar: React.FC = () => {
         <div className="navbar-time">{time}</div>
         <div className="navbar-link">
           <a
-            href="https://fchapoulliep.github.io/portfolio/"
+            href="https://fchapoulliep.github.io/"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Creator's portfolio"

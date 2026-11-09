@@ -31,7 +31,7 @@ const Footer: React.FC = () => {
       </div>
       <div className="footer-links" data-nosnippet>
         <a
-          href="https://fchapoulliep.github.io/portfolio/"
+          href="https://fchapoulliep.github.io/"
           target="_blank"
           rel="noopener noreferrer"
         >
